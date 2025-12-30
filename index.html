@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>แนะนำอาหารตามอารมณ์</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #ffe259, #ffa751);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      width: 360px;
+      padding: 30px;
+      border-radius: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 25px;
+      font-size: 19px;
+    }
+
+    button {
+      background: #ff9800;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .foods {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .food-card {
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 10px;
+    }
+
+    .food-card img {
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .food-name {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>🍽️ แนะนำอาหารตามอารมณ์</h2>
+
+  <select id="emotion">
+    <option value="">-- เลือกอารมณ์ --</option>
+    <option value="ดีใจ">ดีใจ</option>
+    <option value="เศร้า">เศร้า</option>
+    <option value="โมโห">โมโห</option>
+    <option value="เหนื่อย">เหนื่อย</option>
+    <option value="เบื่อ">เบื่อ</option>
+  </select>
+
+  <button onclick="showFoods()">แนะนำอาหาร</button>
+
+  <div id="foodList" class="foods"></div>
+</div>
+
+<script>
+function speak(text) {
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = "th-TH";      // ภาษาไทย
+  msg.rate = 0.9;         // ความเร็ว
+  msg.pitch = 1;          // โทนเสียง
+  window.speechSynthesis.cancel(); // หยุดเสียงเก่า
+  window.speechSynthesis.speak(msg);
+}
+
+function showFoods() {
+  const emotion = document.getElementById("emotion").value;
+  const foodList = document.getElementById("foodList");
+  foodList.innerHTML = "";
+
+  if (emotion === "") {
+    speak("กรุณาเลือกอารมณ์ก่อน");
+    foodList.innerHTML = "<p>กรุณาเลือกอารมณ์ก่อน</p>";
+    return;
+  }
+
+  const foods = {
+    ดีใจ: [
+      { name: "ไอศกรีม", img: "images/icecream.jpg" },
+      { name: "เค้ก", img: "images/cake.jpg" }
+    ],
+    เศร้า: [
+      { name: "ช็อกโกแลต", img: "images/chocolate.jpg" },
+      { name: "ชาเขียว", img: "images/greentea.jpg" }
+    ],
+    โมโห: [
+      { name: "ส้มตำ", img: "images/somtum.jpg" },
+      { name: "ผักกระเพรา", img: "images/padkaprao.jpg" }
+    ],
+    เหนื่อย: [
+      { name: "กาแฟ", img: "images/coffee.jpg" },
+      { name: "ข้าวผัด", img: "images/friedrice.jpg" }
+    ],
+    เบื่อ: [
+      { name: "พิซซ่า", img: "images/pizza.jpg" },
+      { name: "ทาโก้", img: "images/taco.jpg" }
+    ]
+  };
+
+  // แสดงรูปทั้งหมด
+  foods[emotion].forEach(food => {
+    const card = document.createElement("div");
+    card.className = "food-card";
+    card.innerHTML = `
+      <img src="${food.img}">
+      <div class="food-name">${food.name}</div>
+    `;
+    foodList.appendChild(card);
+  });
+
+  // สร้างข้อความเสียง
+  const foodNames = foods[emotion].map(f => f.name).join(" และ ");
+  speak(`อารมณ์ของคุณคือ ${emotion} แนะนำเมนู ${foodNames}`);
+}
+</script>
+
+</body>
+</html>
