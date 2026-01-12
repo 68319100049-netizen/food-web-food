@@ -6,22 +6,49 @@
 
   <style>
     body {
-      font-family: sans-serif;
-      background: linear-gradient(135deg, #ffe259, #ffa751);
+      font-family: 'Prompt', sans-serif;
       min-height: 100vh;
       margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: 1s;
+      overflow: hidden;
     }
+
+    /* Mood Background */
+    body.happy { background: linear-gradient(135deg, #ffe259, #ffa751); }
+    body.sad { background: linear-gradient(135deg, #667db6, #0082c8); }
+    body.angry { background: linear-gradient(135deg, #ff512f, #dd2476); }
+    body.lonely { background: linear-gradient(135deg, #434343, #000000); }
+    body.love { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+    body.calm { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
 
     .container {
       background: white;
-      width: 360px;
+      width: 380px;
       padding: 30px;
       border-radius: 30px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       text-align: center;
+      animation: fadeIn 1s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 5px;
+    }
+
+    #moodText {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 10px;
     }
 
     select, button {
@@ -29,45 +56,122 @@
       padding: 15px;
       margin-top: 15px;
       border-radius: 25px;
-      font-size: 19px;
+      font-size: 17px;
     }
 
     button {
-      background: #ff9800;
+      background: linear-gradient(135deg, #ff9800, #ff5722);
       color: white;
       border: none;
       cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Ripple Effect */
+    button::after {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      width: 0;
+      height: 0;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: 0.4s;
+    }
+
+    button:active::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .emotion-effect {
+      margin-top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ff9800; }
+      to { text-shadow: 0 0 15px #ff5722; }
     }
 
     .foods {
-      margin-top: 30px;
+      margin-top: 20px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      gap: 15px;
     }
 
     .food-card {
-      border: 1px solid #ddd;
       border-radius: 20px;
       padding: 10px;
+      background: #fff5e6;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+      animation: pop 0.5s ease;
+      transition: 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .food-card:hover {
+      transform: scale(1.08) rotate(-1deg);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .food-card img {
       width: 100%;
-      border-radius: 5px;
+      border-radius: 15px;
     }
 
     .food-name {
-      font-size: 20px;
-      margin-top: 10px;
+      font-size: 16px;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    .food-desc {
+      font-size: 13px;
+      color: #555;
+      margin-top: 3px;
+    }
+
+    /* Floating Emoji */
+    .floating {
+      position: fixed;
+      bottom: 0;
+      animation: floatUp 3s linear forwards;
+      font-size: 24px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      from { bottom: 0; opacity: 1; }
+      to { bottom: 100%; opacity: 0; }
     }
   </style>
 </head>
 
-<body>
+<body class="happy">
 
 <div class="container">
   <h2>🍽️ แนะนำอาหารตามอารมณ์</h2>
+  <div id="moodText">เลือกอารมณ์ แล้วให้เราดูแลใจคุณนะ 💖</div>
 
   <select id="emotion">
     <option value="">-- เลือกอารมณ์ --</option>
@@ -76,76 +180,200 @@
     <option value="โมโห">โมโห</option>
     <option value="เหนื่อย">เหนื่อย</option>
     <option value="เบื่อ">เบื่อ</option>
+    <option value="กลัว">กลัว</option>
+    <option value="เสียความรู้สึก">เสียความรู้สึก</option>
+    <option value="ตื่นเต้น">ตื่นเต้น</option>
+    <option value="เหงา">เหงา</option>
+    <option value="อกหัก">อกหัก</option>
+    <option value="ท้อแท้">ท้อแท้</option>
+    <option value="แพนิค">แพนิค</option>
+    <option value="สติแตก">สติแตก</option>
+    <option value="กังวล">กังวล</option>
+    <option value="สิ้นหวัง">สิ้นหวัง</option>
+    <option value="คิดถึง">คิดถึง</option>
   </select>
 
   <button onclick="showFoods()">แนะนำอาหาร</button>
 
+  <div id="emotionEffect" class="emotion-effect"></div>
   <div id="foodList" class="foods"></div>
 </div>
 
 <script>
+/* เสียงติ๊ง */
+const clickSound = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
+
+/* พูด */
 function speak(text) {
   const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = "th-TH";      // ภาษาไทย
-  msg.rate = 0.9;         // ความเร็ว
-  msg.pitch = 1;          // โทนเสียง
-  window.speechSynthesis.cancel(); // หยุดเสียงเก่า
+  msg.lang = "th-TH";
+  msg.rate = 0.9;
+  window.speechSynthesis.cancel();
   window.speechSynthesis.speak(msg);
 }
 
+/* ลอยอิโมจิ */
+function createFloatingEmoji(emoji) {
+  const span = document.createElement("span");
+  span.className = "floating";
+  span.innerText = emoji;
+  span.style.left = Math.random() * 90 + "%";
+  document.body.appendChild(span);
+  setTimeout(() => span.remove(), 3000);
+}
+
 function showFoods() {
+  clickSound.play();
+
   const emotion = document.getElementById("emotion").value;
   const foodList = document.getElementById("foodList");
+  const effect = document.getElementById("emotionEffect");
+  const moodText = document.getElementById("moodText");
+
   foodList.innerHTML = "";
+  effect.innerHTML = "";
 
   if (emotion === "") {
     speak("กรุณาเลือกอารมณ์ก่อน");
-    foodList.innerHTML = "<p>กรุณาเลือกอารมณ์ก่อน</p>";
+    moodText.innerText = "เลือกอารมณ์ก่อนนะ เราอยากดูแลคุณ 💖";
     return;
   }
 
+  /* เปลี่ยนพื้นหลังตามอารมณ์ */
+  document.body.className = "";
+  const moodClass = {
+    ดีใจ: "happy",
+    เศร้า: "sad",
+    อกหัก: "sad",
+    เหงา: "lonely",
+    คิดถึง: "love",
+    โมโห: "angry",
+    กลัว: "calm",
+    กังวล: "calm",
+    แพนิค: "calm",
+    ท้อแท้: "sad",
+    สิ้นหวัง: "sad",
+    ตื่นเต้น: "happy",
+    เบื่อ: "happy",
+    เหนื่อย: "calm",
+    เสียความรู้สึก: "sad",
+    สติแตก: "angry"
+  };
+  if (moodClass[emotion]) {
+    document.body.classList.add(moodClass[emotion]);
+  }
+
+  /* ข้อความผูกใจ */
+  const moodMessage = {
+    ดีใจ: "วันนี้ดูสดใสมากเลยนะ 😄",
+    เศร้า: "ไม่เป็นไรนะ เดี๋ยวมันจะผ่านไป 💙",
+    เหงา: "คุณไม่ได้อยู่คนเดียวนะ 🤍",
+    อกหัก: "หัวใจต้องการเวลาฮีล 💔➡️❤️‍🩹",
+    เหนื่อย: "พักหน่อยก็ได้นะ เดี๋ยวค่อยสู้ต่อ 💪",
+    กังวล: "สูดหายใจลึก ๆ ทุกอย่างจะโอเค 🌿",
+    แพนิค: "ใจเย็น ๆ เราอยู่ตรงนี้กับคุณนะ 🫶",
+    คิดถึง: "บางคนอยู่ในใจเสมอ 💖",
+    โมโห: "ระบายออกมาบ้างก็ได้นะ 😤",
+    ท้อแท้: "คุณเก่งมากแล้วนะ แค่ยังไม่ถึงเวลา 🌈",
+    สิ้นหวัง: "แม้ตอนนี้มืด แต่แสงจะมาแน่นอน ✨",
+    เบื่อ: "มาเปลี่ยนฟีลกันหน่อย 🎉",
+    ตื่นเต้น: "พลังมาเต็มเลยนะวันนี้ ⚡",
+    เสียความรู้สึก: "มันเจ็บได้ แต่คุณยังมีค่าเสมอ 🤍",
+    สติแตก: "ตั้งสติหน่อยนะ เดี๋ยวดีขึ้น 🧠"
+  };
+  moodText.innerText = moodMessage[emotion] || "";
+
+  /* เอฟเฟกต์ลอย */
+  if (emotion === "คิดถึง") createFloatingEmoji("💖");
+  if (emotion === "เศร้า" || emotion === "อกหัก" || emotion === "สิ้นหวัง") createFloatingEmoji("💧");
+  if (emotion === "ตื่นเต้น") createFloatingEmoji("✨");
+  if (emotion === "โมโห" || emotion === "สติแตก") createFloatingEmoji("⚡");
+  if (emotion === "เหงา") createFloatingEmoji("🤍");
+
   const foods = {
     ดีใจ: [
-        { name: "ไอศกรีม", img: "icecream.jpg" },
-        { name: "เค้ก", img: "cake.jpg" }
+      { name: "ไอศกรีม", img: "images/icecream.jpg", desc: "ความหวานช่วยกระตุ้นโดพามีน เพิ่มความสุข" },
+      { name: "เค้ก", img: "images/cake.jpg", desc: "เสริมพลังบวกให้หัวใจ" }
     ],
     เศร้า: [
-        { name: "ช็อกโกแลต", img: "chocolate.jpg" },
-        { name: "ชาเขียว", img: "greentea.jpg" }
+      { name: "ช็อกโกแลต", img: "images/chocolate.jpg", desc: "ช่วยหลั่งเซโรโทนิน ลดความเศร้า" },
+      { name: "ชาเขียว", img: "images/greentea.jpg", desc: "ผ่อนคลายจิตใจ" }
     ],
     โมโห: [
-        { name: "ส้มตำ", img: "somtum.jpg" },
-        { name: "ผัดกะเพรา", img: "padkaprao.jpg" }
+      { name: "ส้มตำ", img: "images/somtum.jpg", desc: "รสจัดช่วยระบายอารมณ์" },
+      { name: "ผัดกะเพรา", img: "images/padkaprao.jpg", desc: "เผ็ดร้อนคลายเครียด" }
     ],
     เหนื่อย: [
-        { name: "กาแฟ", img: "coffee.jpg" },
-        { name: "ข้าวผัด", img: "friedrice.jpg" } 
+      { name: "กาแฟ", img: "images/coffee.jpg", desc: "กระตุ้นร่างกายให้ตื่น" },
+      { name: "ข้าวผัด", img: "images/friedrice.jpg", desc: "เติมพลังงาน" }
     ],
     เบื่อ: [
-        { name: "พิซซ่า", img: "pizza.jpg" },
-        { name: "ทาโก้", img: "taco.jpg" }
+      { name: "ทาโก้", img: "images/taco.jpg", desc: "แปลกใหม่ไม่จำเจ" },
+      { name: "เฟรนช์ฟรายส์", img: "images/fries.jpg", desc: "กินเพลิน" }
+    ],
+    กลัว: [
+      { name: "ซุป", img: "images/soup.jpg", desc: "อุ่นท้อง อุ่นใจ" },
+      { name: "นมอุ่น", img: "images/milk.jpg", desc: "ช่วยให้ผ่อนคลาย" }
+    ],
+    เสียความรู้สึก: [
+      { name: "เค้กช็อกโกแลต", img: "images/chococake.jpg", desc: "ปลอบใจ เพิ่มความหวาน" },
+      { name: "ชานม", img: "images/milktea.jpg", desc: "ดื่มแล้วใจเย็นลง" }
+    ],
+    ตื่นเต้น: [
+      { name: "เบอร์เกอร์", img: "images/burger.jpg", desc: "พลังงานสูง สนุกกับการกิน" },
+      { name: "เฟรนช์ฟรายส์", img: "images/fries.jpg", desc: "กินเพลิน" }
+    ],
+    เหงา: [
+      { name: "ราเมง", img: "images/ramen.jpg", desc: "อุ่นเหมือนมีเพื่อนอยู่ด้วย" },
+      { name: "ข้าวต้ม", img: "images/porridge.jpg", desc: "ปลอบใจได้ดี" }
+    ],
+    อกหัก: [
+      { name: "ไอศกรีมช็อกโกแลต", img: "images/chocoice.jpg", desc: "ช่วยฮีลใจ" },
+      { name: "บิงซู", img: "images/bingsu.jpg", desc: "หวานเย็นชื่นใจ เบี่ยงความเศร้า" }
+    ],
+    ท้อแท้: [
+      { name: "สเต็ก", img: "images/steak.jpg", desc: "โปรตีนเพิ่มพลัง" },
+      { name: "สมูทตี้", img: "images/smoothie.jpg", desc: "สดชื่น มีแรงสู้ต่อ" }
+    ],
+    แพนิค: [
+      { name: "กล้วย", img: "images/banana.jpg", desc: "ช่วยลดความเครียด" },
+      { name: "โยเกิร์ต", img: "images/yogurt.jpg", desc: "ช่วยระบบประสาท" }
+    ],
+    สติแตก: [
+      { name: "ชานมไข่มุก", img: "images/bubbletea.jpg", desc: "ดูดเพลิน ดึงสติกลับมา" },
+      { name: "ขนมหวาน", img: "images/dessert.jpg", desc: "ช่วยให้ใจเย็น" }
+    ],
+    กังวล: [
+      { name: "อัลมอนด์", img: "images/almond.jpg", desc: "ช่วยระบบประสาท" },
+      { name: "ชาอุ่น", img: "images/tea.jpg", desc: "ผ่อนคลาย" }
+    ],
+    สิ้นหวัง: [
+      { name: "ซุปไก่", img: "images/chickensoup.jpg", desc: "อาหารปลอบใจ" },
+      { name: "ข้าวต้มหมู", img: "images/ricepork.jpg", desc: "เรียบง่ายแต่อบอุ่น" }
+    ],
+    คิดถึง: [
+      { name: "อาหารบ้าน ๆ", img: "images/homefood.jpg", desc: "เชื่อมความทรงจำดี ๆ" },
+      { name: "ขนมไทย", img: "images/thaidessert.jpg", desc: "ทำให้นึกถึงคนที่รัก" }
     ]
-};
+  };
 
-  // แสดงรูปทั้งหมด
+  effect.innerHTML = `💖 ตอนนี้คุณรู้สึก <span>${emotion}</span>`;
+
   foods[emotion].forEach(food => {
     const card = document.createElement("div");
     card.className = "food-card";
     card.innerHTML = `
       <img src="${food.img}">
       <div class="food-name">${food.name}</div>
+      <div class="food-desc">${food.desc}</div>
     `;
     foodList.appendChild(card);
   });
 
-  // สร้างข้อความเสียง
   const foodNames = foods[emotion].map(f => f.name).join(" และ ");
-  speak(`อารมณ์ของคุณคือ ${emotion} แนะนำเมนู ${foodNames}`);
+  speak(`ตอนนี้คุณรู้สึก ${emotion} แนะนำให้ทาน ${foodNames} เพื่อช่วยดูแลอารมณ์ของคุณ`);
 }
 </script>
 
 </body>
 </html>
-
-
-
